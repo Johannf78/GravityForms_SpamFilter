@@ -8,7 +8,7 @@ function mark_submission_as_spam( $is_spam, $form, $entry ) {
         return $is_spam;
     }
 	//For debugging
-	echo 'Function is being called.<br>';
+	//echo 'Function is being called.<br>';
 	
      // List of phrases that, if found in the submission, will mark it as spam
     $spam_phrases = array(
