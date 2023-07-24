@@ -12,25 +12,29 @@ function mark_submission_as_spam( $is_spam, $form, $entry ) {
 	
      // List of phrases that, if found in the submission, will mark it as spam
     $spam_phrases = array(
-        'spam phrase 1',
-        'spam phrase 2',
+        'spam',
+        'GSA',
         'spam phrase 3',
     );
 	
 	//For debugging, loop through the $spam_phrases array and echo each phrase
 	/*
+	echo 'List of spam terms: <br>';
 	foreach ($spam_phrases as $phrase) {
     	echo $phrase . '<br>';
 	}
 	*/
+	
 
 	//For debugging. Output all the submitted values
-//    echo '<pre>';
-//    print_r($entry);
-//    echo '</pre>';
-
+	/*
+	echo '<pre>';
+    print_r($entry);
+    echo '</pre>';
+	*/
+	
 	//For debugging. Output the submitted fields and values
-/*
+	/*
 	echo '<h2>Submitted Form Fields and Values:</h2>';
     echo '<ul>';
     foreach ($form['fields'] as $field) {
@@ -45,7 +49,7 @@ function mark_submission_as_spam( $is_spam, $form, $entry ) {
         echo '<li><strong>' . esc_html($label) . ':</strong> ' . esc_html($value) . '</li>';
     }
     echo '</ul>';
-*/
+	*/
 	
 	// Get all the submitted values from the entry
     $form_data = $entry['form'];
@@ -64,7 +68,7 @@ function mark_submission_as_spam( $is_spam, $form, $entry ) {
 		$submission_string = $submission_string . $value;
     }
 	//For debugging
-	//echo 'submission_string: ' . $submission_string . '<br>';
+	//echo '<br>Submission_string: ' . $submission_string . '<br>';
 	
 		
 	 // Check if any of the spam phrases are present in the submission
@@ -85,7 +89,7 @@ function mark_submission_as_spam( $is_spam, $form, $entry ) {
 	// Usage example:
 	//$text_to_check = 'This is not clean text. fuck, ass';
 	if (check_for_profanity($text_to_check)) {
-	     // echo 'Profanity found! <br>';
+	     //echo 'Profanity found! <br>';
 		 $is_spam = true;
 	} else {
 	    //echo 'No profanity found! <br>';
@@ -102,7 +106,10 @@ function mark_submission_as_spam( $is_spam, $form, $entry ) {
 }
 
 function check_for_profanity($text) {
-    // URL of the API
+    //More information and usage on the API used
+    //https://www.purgomalum.com/
+	
+	// URL of the API
     $api_url = 'https://www.purgomalum.com/service/containsprofanity';
 
     // Set up the request parameters
@@ -135,3 +142,4 @@ function check_for_profanity($text) {
 
     return $contains_profanity;
 }
+
