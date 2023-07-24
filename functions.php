@@ -8,7 +8,7 @@ function mark_submission_as_spam( $is_spam, $form, $entry ) {
         return $is_spam;
     }
 	//For debugging
-	//echo 'Function is being called.<br>';
+	echo 'Function is being called.<br>';
 	
      // List of phrases that, if found in the submission, will mark it as spam
     $spam_phrases = array(
@@ -78,6 +78,19 @@ function mark_submission_as_spam( $is_spam, $form, $entry ) {
 	//For debugging
 	//echo 'Is spam: ' .  $is_spam . '<br>';
 	
+	
+	//Profanity Filer, Optionally check if any of the fields contains profanity
+	//The Function and the API call is defined below.
+	$text_to_check = urlencode($submission_string);
+	// Usage example:
+	//$text_to_check = 'This is not clean text. fuck, ass';
+	if (check_for_profanity($text_to_check)) {
+	     // echo 'Profanity found! <br>';
+		 $is_spam = true;
+	} else {
+	    //echo 'No profanity found! <br>';
+	}
+		
     // For testing purposes you can uncomment this line to set all submissions as spam
     //$is_spam = true;
  
@@ -86,4 +99,39 @@ function mark_submission_as_spam( $is_spam, $form, $entry ) {
     }
  
     return $is_spam;
+}
+
+function check_for_profanity($text) {
+    // URL of the API
+    $api_url = 'https://www.purgomalum.com/service/containsprofanity';
+
+    // Set up the request parameters
+    $args = array(
+        'method' => 'GET',
+        'timeout' => 30,
+        'redirection' => 5,
+        'httpversion' => '1.0',
+        'blocking' => true,
+        'headers' => array(),
+        'body' => array(
+            'text' => $text, // The text you want to check for profanity
+        ),
+        'cookies' => array(),
+    );
+
+    // Make the API request
+    $response = wp_remote_get($api_url, $args);
+
+    // Check for errors
+    if (is_wp_error($response)) {
+        return false; // or handle the error in some way
+    }
+
+    // Get the response body
+    $response_body = wp_remote_retrieve_body($response);
+
+    // The API returns "true" if profanity is found, "false" otherwise
+    $contains_profanity = ($response_body === 'true');
+
+    return $contains_profanity;
 }
